@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: vite-react-app
-          image: osamasharaf/vite-react-app:latest
+          image: <DOCKERHUB_USERNAME>/vite-react-app:latest
           ports:
             - containerPort: 80
