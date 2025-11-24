@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vite-react-app
+  labels:
+    app: vite-react-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vite-react-app
+  template:
+    metadata:
+      labels:
+        app: vite-react-app
+    spec:
+      containers:
+        - name: vite-react-app
+          image: <DOCKERHUB_USERNAME>/vite-react-app:latest
+          ports:
+            - containerPort: 80
