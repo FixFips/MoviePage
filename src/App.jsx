@@ -18,75 +18,75 @@ const API_OPTIONS = {
 }
 
 function App() {
-const [searchTerm, setSearchTerm] = useState("");
-const [errorMessage, setErrorMessage] = useState("");
-const [movieList, setMovieList] = useState([]);
-const [isLoading, setIsLoading] = useState(false);
-const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [movieList, setMovieList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
 
-useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
+  useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
-const fetchmovies = async(query = '') => {
-  setIsLoading(true)
-  setErrorMessage("")
+  const fetchmovies = async (query = '') => {
+    setIsLoading(true)
+    setErrorMessage("")
 
-  try {
-    const endpoint = query 
-    ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-    : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
-    const response = await fetch(endpoint, API_OPTIONS)
-    if(!response.ok) {
-      throw new Error("failed to fetch movies")
+    try {
+      const endpoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
+      const response = await fetch(endpoint, API_OPTIONS)
+      if (!response.ok) {
+        throw new Error("failed to fetch movies")
+      }
+      const data = await response.json();
+
+      if (data.Response === 'False') {
+        setErrorMessage("Failed to fetch movies")
+        setMovieList([])
+        return;
+      }
+
+      setMovieList(data.results || [])
+
+    } catch (error) {
+      console.error(error)
+      setErrorMessage("Error fetching movie. Please try again later.")
+    } finally {
+      setIsLoading(false)
     }
-    const data = await response.json();
-
-    if(data.Response === 'False') {
-      setErrorMessage("Failed to fetch movies")
-      setMovieList([])
-      return;
-    } 
-
-    setMovieList(data.results || [])
-
-  } catch (error) {
-    console.error(error)
-    setErrorMessage("Error fetching movie. Please try again later.")
-  } finally {
-    setIsLoading(false)
   }
-}
 
-useEffect(() => {
-  fetchmovies(debouncedSearchTerm)
-}, [debouncedSearchTerm]);
+  useEffect(() => {
+    fetchmovies(debouncedSearchTerm)
+  }, [debouncedSearchTerm]);
 
   return (
     <main>
-      <div className='Pattern'/>
+      <div className='Pattern' />
 
-      <div className='wrapper'/>
+      <div className='wrapper' />
 
       <header>
-        <img src='./hero-img.png' alt="Hero Banner"/>
-        <h1>Find <span className='text-gradient'>Movies</span> You'll Enjoy Without the Hassle</h1>
+        <img src='./hero-img.png' alt="Hero Banner" />
+        <h1>Find <span className='text-gradient'>Movies</span> You'll Enjoy Without the Hassle!</h1>
 
-        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </header>
       <section className="all-movies">
-          <h2 className='mt-[40px]'>All movies</h2>
-          {isLoading ? (
-            <Spinner />
-          ): errorMessage ? (
-            <p className="text-red-500">{errorMessage}</p>
-          ) : (
-            <ul>
-              {movieList.map((movie) => (
-                <MovieCard key={movie.id} movie ={movie} />
-              ))}
-            </ul>
-          )}
+        <h2 className='mt-[40px]'>All movies</h2>
+        {isLoading ? (
+          <Spinner />
+        ) : errorMessage ? (
+          <p className="text-red-500">{errorMessage}</p>
+        ) : (
+          <ul>
+            {movieList.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </ul>
+        )}
       </section>
-      
+
     </main>
 
   )
