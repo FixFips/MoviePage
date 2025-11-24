@@ -18,4 +18,4 @@ spec:
         - name: vite-react-app
           image: osamasharaf/movieapp:v1
           ports:
-            - containerPort: 80
+            - containerPort: 5173
